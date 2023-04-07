@@ -1,0 +1,113 @@
+import os
+
+# create a folder for processed data
+if not os.path.exists('Iris/Processed Data'):
+    os.makedirs('Iris/Processed Data')
+
+# create a folder for raw data
+if not os.path.exists('Iris/Raw Data'):
+    os.makedirs('Iris/Raw Data')
+import shutil
+
+shutil.move('Iris/iris.csv', 'Iris/Raw Data')
+os.listdir('Iris/Raw Data')
+
+import pandas as pd
+
+# read in the raw data
+data = pd.read_csv('Iris/Raw Data/iris.csv')
+
+# perform some data manipulation
+data['petal_ratio'] = data['petal_width'] / data['petal_length']
+
+# save the processed data to a new CSV file
+data.to_csv('Iris/Processed Data/iris_processed.csv', index=False)
+
+os.listdir('Iris/Processed Data')
+
+import pandas as pd
+
+# read in the data
+data = pd.read_csv('Iris/Processed Data/iris_processed.csv')
+
+# get a list of unique species
+species = data['species'].unique()
+
+# calculate the mean sepal length for each species
+for specie in species:
+    mean_sepal_length = data.loc[data['species'] == specie, 'sepal_length'].mean()
+    print("Mean sepal length for", specie, ":", mean_sepal_length)
+
+import matplotlib.pyplot as plt
+
+# create a scatter plot of sepal length versus sepal width for each species
+for specie in species:
+    x = data.loc[data['species'] == specie, 'sepal_length']
+    y = data.loc[data['species'] == specie, 'sepal_width']
+    plt.scatter(x, y, label=specie)
+
+# add a legend and labels to the plot
+plt.legend()
+plt.xlabel('Sepal Length')
+plt.ylabel('Sepal Width')
+plt.title('Scatter Plot of Sepal Length versus Sepal Width by Species')
+
+# display the plot
+plt.show()
+
+import pandas as pd
+
+# read in the data
+data = pd.read_csv('Iris/Processed Data/iris_processed.csv')
+
+# create a dictionary mapping each species to its average petal length
+petal_length_dict = {species: data.loc[data['species'] == species, 'petal_length'].mean() for species in data['species'].unique()}
+
+# print out the dictionary
+print(petal_length_dict)
+
+import pandas as pd
+
+# read in the data
+data = pd.read_csv('Iris/Processed Data/iris_processed.csv')
+
+# create a nested dictionary mapping each species and sepal length to its petal length and petal width
+petal_dict = {}
+for species in data['species'].unique():
+    petal_dict[species] = {}
+    for sepal_length in data['sepal_length'].unique():
+        petal_dict[species][sepal_length] = {'petal_length': data.loc[(data['species'] == species) & (data['sepal_length'] == sepal_length), 'petal_length'].values.tolist(),
+                                             'petal_width': data.loc[(data['species'] == species) & (data['sepal_length'] == sepal_length), 'petal_width'].values.tolist()}
+
+# print out the dictionary
+print(petal_dict)
+
+import pandas as pd
+
+# read in the data
+data = pd.read_csv('Iris/Processed Data/iris_processed.csv')
+
+# sort the data by sepal length
+sorted_data = data.sort_values(by='sepal_length')
+
+# create a list of the top 5 shortest and longest sepals
+shortest_sepals = sorted_data.head(5)['sepal_length'].values.tolist()
+longest_sepals = sorted_data.tail(5)['sepal_length'].values.tolist()
+
+# print out the lists
+print("Top 5 shortest sepals:", shortest_sepals)
+print("Top 5 longest sepals:", longest_sepals)
+
+import pandas as pd
+
+# read in the data
+data = pd.read_csv('Iris/Processed Data/iris_processed.csv')
+
+# create a nested list of lists that stores the petal length and petal width for each iris
+petal_list = []
+for index, row in data.iterrows():
+    petal_list.append([row['petal_length'], row['petal_width']])
+
+# print out the list
+print(petal_list)
+

@@ -1,0 +1,98 @@
+* Import the dataset
+import delimited "Iris/iris.csv", clear
+
+* Rename the variables
+rename V1 sepal_length
+rename V2 sepal_width
+rename V3 petal_length
+rename V4 petal_width
+drop V5
+
+* Save the cleaned dataset as a new file
+save "Iris/Processed Data/iris_cleaned.dta", replace
+
+* Load the cleaned dataset
+use "Iris/Processed Data/iris_cleaned.dta", clear
+
+* Perform descriptive statistics
+summarize sepal_length sepal_width petal_length petal_width
+tabulate species
+
+* Save the statistics as a table
+estout summarize sepal_length sepal_width petal_length petal_width, ///
+    varlabels("Sepal Length" "Sepal Width" "Petal Length" "Petal Width") ///
+    title("Descriptive Statistics") ///
+    cells("mean(fmt(%5.2f)) sd(fmt(%5.2f)) min(fmt(%5.2f)) max(fmt(%5.2f))") ///
+    replace ///
+    out("Iris/Processed Data/descriptive_stats.tex")
+
+* Load the cleaned dataset
+use "Iris/Processed Data/iris_cleaned.dta", clear
+
+* Create a scatterplot of sepal length versus petal length
+scatter sepal_length petal_length, ///
+    title("Scatterplot of Sepal Length vs Petal Length") ///
+    name("Iris/Plots/scatterplot_sepal_vs_petal", replace)
+    
+* Create a histogram of petal width
+histogram petal_width, ///
+    title("Histogram of Petal Width") ///
+    name("Iris/Plots/histogram_petal_width", replace)
+
+* Load the cleaned dataset and graphs
+use "Iris/Processed Data/iris_cleaned.dta", clear
+graph display Iris/Plots/scatterplot_sepal_vs_petal.png
+graph display Iris/Plots/histogram_petal_width.png
+
+* Save the processed dataset as a new file
+save "Iris/Processed Data/iris_processed.dta", replace
+
+import delimited "path/to/iris.csv", delimiter(",")
+
+browse
+
+import delimited "path/to/iris.csv", delimiter(",") varnames
+
+// Convert string variable "species" to numeric
+destring species, replace
+
+// Convert numeric variable "sepal_length" to string
+encode sepal_length, generate(sepal_length_str)
+
+// Identify missing values in variable "petal_width"
+missing petal_width
+
+// Replace missing values with the mean of the non-missing values
+sum petal_width, meanonly
+replace petal_width = r(mean) if missing(petal_width)
+
+save "path/to/Iris.dta", replace
+
+sysuse iris, clear
+
+// Filter observations to include only species "setosa"
+keep if species == "setosa"
+
+// Select variables to include in analysis
+keep sepal_length sepal_width
+
+// Create a new variable that is the product of sepal length and width
+gen sepal_area = sepal_length * sepal_width
+
+
+regress SepalLength SepalWidth PetalLength PetalWidth
+
+
+scatter SepalLength SepalWidth
+
+scatter SepalLength SepalWidth, title("Scatterplot of Sepal Length vs. Sepal Width") xlabel("Sepal Length (cm)") ylabel("Sepal Width (cm)") legend(off) ///
+msymbol(circle) mcolor(blue)
+
+
+scatter SepalLength SepalWidth, title("Scatterplot of Sepal Length vs. Sepal Width") xlabel("Sepal Length (cm)") ylabel("Sepal Width (cm)") legend(off) ///
+msymbol(circle) mcolor(blue)
+
+graph export "scatterplot_sepal.png", replace
+
+
+
